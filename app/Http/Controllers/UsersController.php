@@ -35,7 +35,10 @@ class UsersController extends Controller
 /*个人中心页面*/
     public function show(User $user)
     {
-        return view('users.show',compact('user'));
+        $statuses = $user->statuses()
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(30);
+        return view('users.show', compact('user', 'statuses'));
     }
 /*注册用户 保存数据*/
 public function store(Request $request)
@@ -118,5 +121,7 @@ public function store(Request $request)
         session()->flash('success', '恭喜你，激活成功！');
         return redirect()->route('users.show', [$user]);
     }
+
+
 
 }
